@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import APKit
 
 class GraphViewController: UIViewController {
     
@@ -45,12 +44,12 @@ class GraphViewController: UIViewController {
         super.viewDidLoad()
 
         // Configure buttons
-        self.graphView.startPauseButton.addTarget(self, action: "startPause", forControlEvents: .TouchUpInside)
-        self.graphView.infoButton.addTarget(self, action: "infoTapped", forControlEvents: .TouchUpInside)
-        self.graphView.resetButton.addTarget(self, action: "resetAll", forControlEvents: .TouchUpInside)
+        self.graphView.startPauseButton.addTarget(self, action: #selector(startPause), forControlEvents: .TouchUpInside)
+        self.graphView.infoButton.addTarget(self, action: #selector(infoTapped), forControlEvents: .TouchUpInside)
+        self.graphView.resetButton.addTarget(self, action: #selector(resetAll), forControlEvents: .TouchUpInside)
         // Configure slider for multiplier
-        self.graphView.frequencySlider.addTarget(self, action: "frequencySliderMoved:", forControlEvents: .ValueChanged)
-        self.graphView.offsetSlider.addTarget(self, action: "offsetSliderMoved:", forControlEvents: .ValueChanged)
+        self.graphView.frequencySlider.addTarget(self, action: #selector(frequencySliderMoved), forControlEvents: .ValueChanged)
+        self.graphView.offsetSlider.addTarget(self, action: #selector(offsetSliderMoved), forControlEvents: .ValueChanged)
         // Set function label text
         self.graphView.functionLabel.setTitle("y = sin (\(self.functionMultiplier)x)", forState: .Normal)
         // Calculate number of points to plot, based on screen size (#hack)
@@ -110,7 +109,7 @@ class GraphViewController: UIViewController {
                         self.updatePoints(ys)
                     }
                 }
-                ++epoch
+                epoch += 1
             }
         }
     }
@@ -139,7 +138,7 @@ class GraphViewController: UIViewController {
         infoView.label2.text = "How do I use it?"
         infoView.field2.text = "The green wave is the function we'd like to model, the red wave is the neural network's output. Here we watch the network's learning process - live - on the graph.\n\n - Tap 'Start' to begin the training \n - Tap 'Pause' to pause the training\n - Tap 'Reset' to create a new network\n - Adjust the sliders to change the target"
         infoView.label3.text = "How does it work?"
-        infoView.field3.text = "For each X coordinate on the graph, the neural network 'guesses' the Y value. The error is then propagated through the network, and over time our model converges on the target function."
+        infoView.field3.text = "For each X coordinate on the graph, the neural network 'guesses' the Y value. The error is then propagated through the network, and over time our model converges closer to the target function."
         DrawerNavigationController.globalDrawerController().presentInfoView(infoView)
     }
     
