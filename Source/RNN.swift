@@ -15,5 +15,5 @@ import Accelerate
  signals backwards and forwards and have dynamic states*/
 
 public enum RNNError: {
-    
+
 }
