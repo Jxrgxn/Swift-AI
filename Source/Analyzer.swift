@@ -1,4 +1,4 @@
-// Tokenizer.swift
+// Enumerator.swift
 //
 // Copyright (c) 2015 Ayaka Nonaka
 //
@@ -22,25 +22,28 @@
 
 import Foundation
 
-public struct Tokenizer: Analyzer {
-    let seed: Seed
+typealias Pair = (String, String)
 
-    var scheme: String {
-        return NSLinguisticTagSchemeNameTypeOrLexicalClass
+protocol Analyzer {
+    var seed: Seed { get }
+    var scheme: String { get }
+}
+
+internal func analyze(analyzer: Analyzer, text: String, options: NSLinguisticTaggerOptions?) -> [Pair] {
+    var pairs: [Pair] = []
+
+    let range = NSRange(location: 0, length: text.characters.count)
+    let options = options ?? analyzer.seed.linguisticTaggerOptions
+    let tagger = analyzer.seed.linguisticTaggerWithOptions(options)
+
+    tagger.string = text
+    tagger.setOrthography(analyzer.seed.orthography, range: range)
+    tagger.enumerateTagsInRange(range, scheme: analyzer.scheme, options: options) { (tag: String?, tokenRange, range, stop) in
+        if let tag = tag {
+            let token = (text as NSString).substringWithRange(tokenRange)
+            let pair = (token, tag)
+            pairs.append(pair)
+        }
     }
-
-    public init(seed: Seed = Seed()) {
-        self.seed = seed
-    }
-
-    /**
-        Returns the tokens for the input text using the specified linguistic tagger options.
-        @param text Text to tokenize
-        @param options Linguistic tagger options
-
-        @return The tokens
-    */
-    public func tokenize(text: String, options: NSLinguisticTaggerOptions? = nil) -> [String] {
-        return analyze(self, text: text, options: options).map { (token, tag) in token }
-    }
+    return pairs
 }

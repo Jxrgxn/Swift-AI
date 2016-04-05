@@ -1,4 +1,4 @@
-// Tokenizer.swift
+// Lemmatizer.swift
 //
 // Copyright (c) 2015 Ayaka Nonaka
 //
@@ -22,11 +22,11 @@
 
 import Foundation
 
-public struct Tokenizer: Analyzer {
+public struct Lemmatizer: Analyzer {
     let seed: Seed
 
     var scheme: String {
-        return NSLinguisticTagSchemeNameTypeOrLexicalClass
+        return NSLinguisticTagSchemeLemma
     }
 
     public init(seed: Seed = Seed()) {
@@ -34,13 +34,15 @@ public struct Tokenizer: Analyzer {
     }
 
     /**
-        Returns the tokens for the input text using the specified linguistic tagger options.
-        @param text Text to tokenize
-        @param options Linguistic tagger options
+        Returns the lemmatized tokens for the input text using the specified linguistic tagger options.
 
-        @return The tokens
+        @param text Text to lemmatized
+        @param options Linguistic tagger options
+        @return The lemmatized tokens
     */
-    public func tokenize(text: String, options: NSLinguisticTaggerOptions? = nil) -> [String] {
-        return analyze(self, text: text, options: options).map { (token, tag) in token }
+    public func lemmatizeWordsInText(text: String, options: NSLinguisticTaggerOptions? = nil) -> [String] {
+        return analyze(self, text: text, options: options).map { (token, lemma) in lemma.lowercaseString }.filter {
+            !$0.isEmpty
+        }
     }
 }

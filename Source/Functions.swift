@@ -1,4 +1,4 @@
-// Tokenizer.swift
+// Functions.swift
 //
 // Copyright (c) 2015 Ayaka Nonaka
 //
@@ -22,25 +22,9 @@
 
 import Foundation
 
-public struct Tokenizer: Analyzer {
-    let seed: Seed
-
-    var scheme: String {
-        return NSLinguisticTagSchemeNameTypeOrLexicalClass
+func argmax<T, U: Comparable>(elements: [(T, U)]) -> T? {
+    if let start = elements.first {
+        return elements.reduce(start) { $0.1 > $1.1 ? $0 : $1 }.0
     }
-
-    public init(seed: Seed = Seed()) {
-        self.seed = seed
-    }
-
-    /**
-        Returns the tokens for the input text using the specified linguistic tagger options.
-        @param text Text to tokenize
-        @param options Linguistic tagger options
-
-        @return The tokens
-    */
-    public func tokenize(text: String, options: NSLinguisticTaggerOptions? = nil) -> [String] {
-        return analyze(self, text: text, options: options).map { (token, tag) in token }
-    }
+    return nil
 }

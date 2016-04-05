@@ -1,4 +1,4 @@
-// Tokenizer.swift
+// Seed.swift
 //
 // Copyright (c) 2015 Ayaka Nonaka
 //
@@ -22,25 +22,15 @@
 
 import Foundation
 
-public struct Tokenizer: Analyzer {
-    let seed: Seed
+public struct Seed {
+    typealias Language = String
 
-    var scheme: String {
-        return NSLinguisticTagSchemeNameTypeOrLexicalClass
-    }
+    private let language: Language = "en"
+    let linguisticTaggerOptions: NSLinguisticTaggerOptions = [.OmitWhitespace, .OmitPunctuation, .OmitOther]
+    let orthography = NSOrthography(dominantScript: "Latn", languageMap: ["Latn" : ["en"]])
 
-    public init(seed: Seed = Seed()) {
-        self.seed = seed
-    }
-
-    /**
-        Returns the tokens for the input text using the specified linguistic tagger options.
-        @param text Text to tokenize
-        @param options Linguistic tagger options
-
-        @return The tokens
-    */
-    public func tokenize(text: String, options: NSLinguisticTaggerOptions? = nil) -> [String] {
-        return analyze(self, text: text, options: options).map { (token, tag) in token }
+    func linguisticTaggerWithOptions(options: NSLinguisticTaggerOptions) -> NSLinguisticTagger {
+        let tagSchemes = NSLinguisticTagger.availableTagSchemesForLanguage(self.language)
+        return NSLinguisticTagger(tagSchemes: tagSchemes, options: Int(options.rawValue))
     }
 }

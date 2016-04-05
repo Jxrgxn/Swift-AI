@@ -1,4 +1,4 @@
-// Tokenizer.swift
+// Tagger.swift
 //
 // Copyright (c) 2015 Ayaka Nonaka
 //
@@ -22,7 +22,7 @@
 
 import Foundation
 
-public struct Tokenizer: Analyzer {
+public struct Tagger: Analyzer {
     let seed: Seed
 
     var scheme: String {
@@ -34,13 +34,15 @@ public struct Tokenizer: Analyzer {
     }
 
     /**
-        Returns the tokens for the input text using the specified linguistic tagger options.
-        @param text Text to tokenize
-        @param options Linguistic tagger options
+        Returns the tagged tokens for the input text using the specified linguistic tagger options.
 
-        @return The tokens
+        @param text Text to tag
+        @param options Linguistic tagger options
+        @return The tagged tokens
     */
-    public func tokenize(text: String, options: NSLinguisticTaggerOptions? = nil) -> [String] {
-        return analyze(self, text: text, options: options).map { (token, tag) in token }
+    public func tagWordsInText(text: String, options: NSLinguisticTaggerOptions? = nil) -> [TaggedToken] {
+        return analyze(self, text: text, options: options).map { (token, tag) in
+            TaggedToken(token: token, tag: tag)
+        }
     }
 }

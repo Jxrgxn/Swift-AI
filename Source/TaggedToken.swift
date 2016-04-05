@@ -1,4 +1,4 @@
-// Tokenizer.swift
+// TaggedToken.swift
 //
 // Copyright (c) 2015 Ayaka Nonaka
 //
@@ -22,25 +22,22 @@
 
 import Foundation
 
-public struct Tokenizer: Analyzer {
-    let seed: Seed
+public struct TaggedToken: Equatable {
+    let token: String
+    let tag: String
 
-    var scheme: String {
-        return NSLinguisticTagSchemeNameTypeOrLexicalClass
+    public init(token: String, tag: String) {
+        self.token = token
+        self.tag = tag
     }
+}
 
-    public init(seed: Seed = Seed()) {
-        self.seed = seed
+extension TaggedToken: CustomStringConvertible {
+    public var description: String {
+        return "('\(token)' \(tag))"
     }
+}
 
-    /**
-        Returns the tokens for the input text using the specified linguistic tagger options.
-        @param text Text to tokenize
-        @param options Linguistic tagger options
-
-        @return The tokens
-    */
-    public func tokenize(text: String, options: NSLinguisticTaggerOptions? = nil) -> [String] {
-        return analyze(self, text: text, options: options).map { (token, tag) in token }
-    }
+public func ==(lhs: TaggedToken, rhs: TaggedToken) -> Bool {
+    return lhs.token == rhs.token && lhs.tag == rhs.tag
 }
